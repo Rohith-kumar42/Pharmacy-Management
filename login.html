@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+	* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: linear-gradient(to bottom, #5ea9dd, #17223b);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #f4f7fa;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.login-form {
+    margin-top: 20px;
+}
+
+.profile-img img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #5ea9dd;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    display: none;
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+}
+
+input[type="email"]:invalid + .error-message {
+    display: block;
+}
+
+.remember-me {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.btn-login {
+    width: 100%;
+    background-color: #23d160;
+    border: none;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background-color: #20b853;
+}
+
+.links {
+    margin-top: 20px;
+}
+
+.links a {
+    color: #23d160;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+footer p {
+    font-weight: bold;
+}
+
+footer span {
+    color: #23d160;
+}
+
+	</style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <div class="profile-img">
+                <img src="https://via.placeholder.com/128" alt="Profile">
+            </div>
+            <h2>Login</h2>
+            <form action="#">
+                <div class="input-group">
+                    <input type="email" placeholder="Your Email" required>
+                    <span class="error-message">Please enter valid email</span>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Your Password" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <div class="links">
+                <a href="#">Sign Up</a> · 
+                <a href="#">Forgot Password</a> · 
+                <a href="#">Need Help?</a>
+            </div>
+        </div>
+        <footer>
+            <p style="color:green">pharma<span>care</span></p>
+        </footer>
+    </div>
+</body>
+</html>
