@@ -63,13 +63,21 @@ try {
         $stmt->close();
     }
 
+    // Truncate bill_temp table
+    $truncate_result = $conn->query("TRUNCATE TABLE bill_temp");
+    if (!$truncate_result) {
+        throw new Exception("Failed to truncate bill_temp table: " . $conn->error);
+    }
+
     // Commit the transaction
     $conn->commit();
     
+    echo json_encode(['success' => true, 'message' => "Stock updated and bill_temp truncated successfully.", 'redirect' => true]);
+
 } catch (Exception $e) {
     // Rollback the transaction on error
     $conn->rollback();
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => $e->getMessage(), 'redirect' => false]);
 }
 
 // Close the database connection

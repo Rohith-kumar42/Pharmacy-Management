@@ -87,45 +87,84 @@ $result = $conn->query($sql);
             <button class="search-btn" onclick="searchDrugs()">Search</button>
         </div>
         <div class="drug-section">
-            <h2>Expired Medicines</h2>
+            <h2>Out of Stock Medicines</h2>
             <div class="drug-carousel">
     
 </div>
 
 <div class="drug-carousel">
-    <?php
-       $conn = new mysqli("localhost", "root", "", "pharmacy_db");
+<?php
+$conn = new mysqli("localhost", "root", "", "pharmacy_db");
 
-       // Check connection
-       if ($conn->connect_error) {
-           die("Connection failed: " . $conn->connect_error);
-       }
-       $sql_out_of_stock = "SELECT * FROM stock WHERE quantity = 0";
-        $result_out_of_stock = $conn->query($sql_out_of_stock);
-        if ($result_out_of_stock->num_rows > 0) {
-        while ($row = $result_expired->fetch_assoc()) {
-            echo '<div class="drug-card">';
-            echo '<img src="uploads/' . $row['photo'] . '" alt="' . $row['name'] . '"><br>';
-            echo '<span class="id">' . $row['id'] . '</span><br>';
-            echo '<h3>' . $row['name'] . '</h3>';
-            echo '<p>&#8377;' . $row['price'] . '</p>';
-            echo '<p>Stock Available: ' . $row['quantity'] . '</p>';
-            echo '<span class="expired">Expired: ' . $row['date'] . '</span><br><br>';
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-            // Only show "Add to Bill" button if there is stock
-            if ($row['quantity'] > 0) {
-                echo '<button class="add-bill-btn" data-name="' . $row['name'] . '" data-price="' . $row['price'] . '">Add to Bill</button>';
-            }
-            echo '</div>';
-        }
-    } else {
-        echo '<p>No out of stock found.</p>';
+$sql_out_of_stock = "SELECT * FROM stock WHERE quantity = 0";
+$result_out_of_stock = $conn->query($sql_out_of_stock);
+
+if ($result_out_of_stock->num_rows > 0) {
+    while ($row = $result_out_of_stock->fetch_assoc()) {
+        echo '<div class="drug-card">';
+        echo '<img src="uploads/' . $row['photo'] . '" alt="' . $row['name'] . '"><br>';
+        echo '<span class="id">' . $row['id'] . '</span><br>';
+        echo '<h3>' . $row['name'] . '</h3>';
+        echo '<p>&#8377;' . $row['price'] . '</p>';
+        echo '<p>Stock Available: ' . $row['quantity'] . '</p>';
+        echo '<span class="expired">Expired: ' . $row['date'] . '</span><br><br>';
+        
+        // Input number for updating stock quantity
+        echo '<label for="quantity-' . $row['id'] . '">Update Quantity:</label><br>';
+        echo '<input type="number" id="quantity-' . $row['id'] . '" value="' . $row['quantity'] . '" min="0"><br>';
+        
+        // Update Quantity button with AJAX call
+        echo '<button class="update-quantity-btn download-btn" data-id="' . $row['id'] . '">Update Quantity</button>';
+        
+        echo '</div>';
     }
+} else {
+    echo '<p>No out of stock found.</p>';
+}
 
-    // Close connection
-    $conn->close();
-    ?>
+// Close connection
+$conn->close();
+?>
+
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // When the "Update Quantity" button is clicked
+        $('.update-quantity-btn').on('click', function() {
+            var drugId = $(this).data('id');
+            var newQuantity = $('#quantity-' + drugId).val();
+            
+            // Make sure the quantity is not negative
+            if (newQuantity < 0) {
+                alert('Quantity cannot be negative.');
+                return;
+            }
+            
+            // AJAX call to update the quantity in the database
+            $.ajax({
+                url: 'update_quantity.php',
+                type: 'POST',
+                data: {
+                    id: drugId,
+                    quantity: newQuantity
+                },
+                success: function(response) {
+                    alert('Quantity updated successfully.');
+                },
+                error: function() {
+                    alert('An error occurred while updating quantity.');
+                }
+            });
+        });
+    });
+</script>
 
 
 </body>

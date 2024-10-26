@@ -1,1 +1,6 @@
 need to make sure bill_temp is created every time billing happens
+the bill is not saved rightly i.e checkout table is not added to both bill,bill_temp
+out of stock is not working
+need to add payment gateway 
+need to add gst and other tasks to the stock,bill
+update stock should be added in outofstock page

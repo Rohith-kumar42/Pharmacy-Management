@@ -59,46 +59,49 @@ $result = $conn->query($sql);
 </head>
 <body>
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pharmacy_db";
+$conn = new mysqli("localhost", "root", "", "pharmacy_db");
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch data from the `bill` table
-$sql = "SELECT * FROM bill";
+$sql = "
+SELECT b.*, s.date AS expire_date
+FROM bill_temp b
+LEFT JOIN stock s ON b.drug_id = s.id
+";
+
 $result = $conn->query($sql);
+
 $merged_data = [];
 
-if ($result->num_rows > 0) {
+if ($result && $result->num_rows > 0) {
     // Process each row
     while ($row = $result->fetch_assoc()) {
-        // Create a unique key based only on drug_id
+        // Create a unique key based on drug_id
         $key = $row['drug_id'];
 
         if (isset($merged_data[$key])) {
             // Merge quantities and prices
             $merged_data[$key]['quantity'] += $row['quantity'];
             $merged_data[$key]['price'] = round($merged_data[$key]['price'] + $row['price'], 2);
+            
+            // Update expiry date if it exists in the stock table
+            if (!empty($row['expire_date'])) {
+                $merged_data[$key]['expire_date'] = $row['expire_date'];
+            }
         } else {
             // If key does not exist, add it to the array
             $merged_data[$key] = [
                 'drug_name' => $row['drug_name'],
-                'drug_id' => $row['id'],
+                'drug_id' => $row['drug_id'],
                 'quantity' => $row['quantity'],
-                'expire_date' => $row['expire_date'],
+                'expire_date' => !empty($row['expire_date']) ? $row['expire_date'] : null,
                 'price' => $row['price']
             ];
         }
     }
-}
+} 
 
 ?>
 <div class="container">
@@ -184,6 +187,7 @@ if ($result->num_rows > 0) {
 
                         // After successful stock update, initiate the print action
                         printBill();
+                        
                     } else {
                         alert("Failed to update stock: " + response.message);
                     }
