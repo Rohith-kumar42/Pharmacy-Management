@@ -399,7 +399,7 @@ if ($conn->connect_error) {
 $today = date('Y-m-d');
 
 // Query the stock data where the expiry date is greater than today
-$sql = "SELECT * FROM stock WHERE date > '$today'";
+$sql = "SELECT * FROM stock WHERE date > '$today' AND quantity > 0";
 $result = $conn->query($sql);
 
 // Generate drug cards

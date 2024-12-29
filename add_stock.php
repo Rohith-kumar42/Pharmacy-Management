@@ -238,10 +238,9 @@
             // Execute the statement
             if ($stmt->execute()) {
                 echo "New stock added successfully";
-                header("Location: home.php");  // Redirect to home page after success
+                // header("Location: home.php");  // Redirect to home page after success
+                // exit();  // Ensure the script stops after the redirect
                 exit();  // Ensure the script stops after the redirect
-            } else {
-                echo "Error: " . $stmt->error;
             }
 
             // Close statement
